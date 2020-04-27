@@ -1,8 +1,14 @@
 from hashlib import sha256
 
+def find_nonce(zero_complexity , root_value):
 
-def brute_find(complexity, root):
-    print("H")
+    prefix = '0' * zero_complexity
+    nonce = 0
+    zero_prefix_hash = root_value
+    while zero_prefix_hash[:zero_complexity] != prefix:
+        zero_prefix_hash = sha256((str(nonce) + root_value).encode()).hexdigest()
+        nonce += 1
+    return nonce, zero_prefix_hash
 
 
 # Merge two string and apply hash256 on the result, the chain order decided by 'side' input
@@ -15,7 +21,6 @@ def merge_hash_by_side(side, start_value, path_value):
 
 # Check for given leaf, root, and path, if proof of inclusion is validate
 def check_proof(leaf_value, root_value, check_path):
-
     # Return bool from comparison between constructed root(from path) and given root
     if len(check_path) == 0:
         return leaf_value == root_value
@@ -77,24 +82,34 @@ if __name__ == '__main__':
     current_merkle_tree = None
     user_input = ' '
     try:
-
         while terminal_on:
 
+            # Get user input and split it
             user_input = list(map(str, input().split()))
+            # First arg map to the command
             mode = int(user_input[0])
-            if mode is 1:  # Construct merkle tree
+
+            # Construct merkle tree
+            if mode is 1:
                 current_merkle_tree = build_merkle_tree(user_input[1:])
                 print(current_merkle_tree["value"])
 
-            elif mode is 2: # Create proof of inclusion
+            # Create proof of inclusion
+            elif mode is 2:
                 path = get_proof(int(user_input[1]), current_merkle_tree, list())
                 print(' '.join(path[::-1]))
-            elif mode is 3: # Check proof of inclusion
+
+            # Check proof of inclusion
+            elif mode is 3:
                 print(check_proof(user_input[1], user_input[2], user_input[3:]))
-            elif mode is 4: # Find nonce with brute force
-                print('op: 4')
-            else:   # Exit
-                print('op: 5')
+
+            # Find nonce with brute force
+            elif mode is 4:
+                nonce_number, zero_prefix_hash = find_nonce(int(user_input[1]), current_merkle_tree['value'])
+                print(nonce_number, zero_prefix_hash)
+
+            # Exit
+            else:
                 terminal_on = False
     except ValueError:
         exit(0)
