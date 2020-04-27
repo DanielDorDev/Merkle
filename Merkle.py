@@ -1,11 +1,17 @@
 from hashlib import sha256
 
+
+# Find nonce prefix, such that running sha256(nonce chained root hash) will output zero prefix hash
 def find_nonce(zero_complexity , root_value):
 
+    # Prefix for validation exam
     prefix = '0' * zero_complexity
     nonce = 0
     zero_prefix_hash = root_value
+
+    # Loop until zero prefix hash found (valid prefix zeros exist)
     while zero_prefix_hash[:zero_complexity] != prefix:
+
         zero_prefix_hash = sha256((str(nonce) + root_value).encode()).hexdigest()
         nonce += 1
     return nonce, zero_prefix_hash
@@ -105,8 +111,8 @@ if __name__ == '__main__':
 
             # Find nonce with brute force
             elif mode is 4:
-                nonce_number, zero_prefix_hash = find_nonce(int(user_input[1]), current_merkle_tree['value'])
-                print(nonce_number, zero_prefix_hash)
+                nonce_number, prefix_hash = find_nonce(int(user_input[1]), current_merkle_tree['value'])
+                print(nonce_number, prefix_hash)
 
             # Exit
             else:
