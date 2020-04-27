@@ -111,8 +111,8 @@ if __name__ == '__main__':
 
             # Find nonce with brute force
             elif mode is 4:
-                nonce_number, prefix_hash = find_nonce(int(user_input[1]), current_merkle_tree['value'])
-                print(nonce_number, prefix_hash)
+                nonce_number, prefix_hash_result = find_nonce(int(user_input[1]), current_merkle_tree['value'])
+                print(nonce_number, prefix_hash_result)
 
             # Exit
             else:
