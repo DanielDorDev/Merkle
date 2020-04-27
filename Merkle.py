@@ -1,10 +1,6 @@
 from hashlib import sha256
 
 
-def hello():
-    print("H")
-
-
 def build_merkle_tree(args):
 
     for a in args:
