@@ -2,8 +2,9 @@ from hashlib import sha256
 
 
 # Find nonce prefix, such that running sha256(nonce chained root hash) will output zero prefix hash
-def find_nonce(zero_complexity , root_value):
-
+def find_nonce(zero_complexity, root_value):
+    if isinstance(zero_complexity, int) is not True or zero_complexity < 1:
+        exit(0)
     # Prefix for validation exam
     prefix = '0' * zero_complexity
     nonce = 0
@@ -11,9 +12,9 @@ def find_nonce(zero_complexity , root_value):
 
     # Loop until zero prefix hash found (valid prefix zeros exist)
     while zero_prefix_hash[:zero_complexity] != prefix:
+        nonce += 1
 
         zero_prefix_hash = sha256((str(nonce) + root_value).encode()).hexdigest()
-        nonce += 1
     return nonce, zero_prefix_hash
 
 
@@ -118,4 +119,6 @@ if __name__ == '__main__':
             else:
                 terminal_on = False
     except ValueError:
+        exit(0)
+    except IndexError:
         exit(0)
